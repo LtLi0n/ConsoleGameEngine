@@ -1,19 +1,17 @@
-﻿namespace ConsoleGameEngine {
+﻿using System;
+using System.Linq;
+using System.Threading;
 
-	using System;
-	using System.Linq;
-	using System.Threading;
-
-	/// <summary>
-	/// Abstract class to aid in Gamemaking.
-	/// Implements an instance of the ConsoleEngine and has Looping methods.
-	/// </summary>
-	public abstract class ConsoleGame {
+namespace ConsoleGameEngine 
+{
+	public abstract class ConsoleGame 
+    {
 		/// <summary> Instance of a ConsoleEngine. </summary>
 		public ConsoleEngine Engine { get; private set; }
 
 		/// <summary> A counter representing the current unique frame we're at. </summary>
 		public int FrameCounter { get; set; }
+
 		/// <summary> Factor for generating framerate-independent physics. time between last frame and current. </summary>
 		public float DeltaTime { get; set; }
 
@@ -21,7 +19,7 @@
 		public int TargetFramerate { get; set; }
 
 		private bool Running { get; set; }
-		private Thread gameThread;
+		private Thread _gameThread;
 
 		private double[] framerateSamples;
 
@@ -32,35 +30,39 @@
 		/// <param name="fontH">´Height of the font.</param>
 		/// <param name="m">Framerate mode to run at.</param>
 		/// <see cref="FramerateMode"/> <see cref="ConsoleEngine"/>
-		public void Construct(int width, int height, int fontW, int fontH, FramerateMode m) {
+		public void Construct(int width, int height, int fontW, int fontH, FramerateMode m) 
+        {
 			TargetFramerate = 30;
 
 			Engine = new ConsoleEngine(width, height, fontW, fontH);
 			Create();
 
-			if (m == FramerateMode.Unlimited) gameThread = new Thread(new ThreadStart(GameLoopUnlimited));
-			if (m == FramerateMode.MaxFps) gameThread = new Thread(new ThreadStart(GameLoopLocked));
+			if (m == FramerateMode.Unlimited) _gameThread = new Thread(new ThreadStart(GameLoopUnlimited));
+			else if (m == FramerateMode.MaxFps) _gameThread = new Thread(new ThreadStart(GameLoopLocked));
 			Running = true;
-			gameThread.Start();
+            _gameThread.Start();
 
 			// gör special checks som ska gå utanför spelloopen
 			// om spel-loopen hänger sig ska man fortfarande kunna avsluta
-			while (Running) {
+			while (Running) 
+            {
 				CheckForExit();
 			}
 		}
 
-		private void GameLoopLocked() {
+		private void GameLoopLocked() 
+        {
 			int sampleCount = TargetFramerate;
 			framerateSamples = new double[sampleCount];
 
 			DateTime lastTime;
 			float uncorrectedSleepDuration = 1000 / TargetFramerate;
-			while (Running) {
+			while (Running)
+            {
 				lastTime = DateTime.UtcNow;
 
 				FrameCounter++;
-				FrameCounter = FrameCounter % sampleCount;
+				FrameCounter %= sampleCount;
 
 				// kör main programmet
 				Update();
@@ -68,7 +70,8 @@
 
 				float computingDuration = (float)(DateTime.UtcNow - lastTime).TotalMilliseconds;
 				int sleepDuration = (int)(uncorrectedSleepDuration - computingDuration);
-				if (sleepDuration > 0) {
+				if (sleepDuration > 0) 
+                {
 					// programmet ligger före maxFps, sänker det
 					Thread.Sleep(sleepDuration);
 				}
@@ -81,16 +84,18 @@
 			}
 		}
 
-		private void GameLoopUnlimited() {
+		private void GameLoopUnlimited() 
+        {
 			int sampleCount = TargetFramerate;
 			framerateSamples = new double[sampleCount];
 
 			DateTime lastTime;
-			while (Running) {
+			while (Running) 
+            {
 				lastTime = DateTime.UtcNow;
 
 				FrameCounter++;
-				FrameCounter = FrameCounter % sampleCount;
+				FrameCounter %= sampleCount;
 
 				Update();
 				Render();
@@ -108,12 +113,15 @@
 
 		/// <summary> Gets the current framerate the application is running at. </summary>
 		/// <returns> Application Framerate. </returns>
-		public double GetFramerate() {
+		public double GetFramerate() 
+        {
 			return 1 / (framerateSamples.Sum() / (TargetFramerate));
 		}
 
-		private void CheckForExit() {
-			if (Engine.GetKeyDown(ConsoleKey.Delete)) {
+		private void CheckForExit() 
+        {
+			if (Engine.GetKeyDown(ConsoleKey.Delete)) 
+            {
 				Running = false;
 			}
 		}

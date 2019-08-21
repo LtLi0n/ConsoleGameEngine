@@ -1,13 +1,14 @@
-﻿namespace ConsoleGameEngine {
-	using System;
-	using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
-	class ConsoleFont {
-
-
-
-		internal static int SetFont(IntPtr h, short sizeX, short sizeY) {
-			if (h == new IntPtr(-1)) {
+namespace ConsoleGameEngine 
+{
+	internal class ConsoleFont 
+    {
+		internal static int SetFont(IntPtr h, short sizeX, short sizeY) 
+        {
+			if (h == new IntPtr(-1)) 
+            {
 				return Marshal.GetLastWin32Error();
 			}
 

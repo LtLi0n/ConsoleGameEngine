@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ConsoleGameEngine {
+namespace ConsoleGameEngine 
+{
 	/// <summary> A FIGlet font. </summary>
-	public class FigletFont {
+	public class FigletFont 
+    {
 
 		public int CommentLines { get; private set; }
 		public string HardBlank { get; private set; }
@@ -16,18 +18,21 @@ namespace ConsoleGameEngine {
 		public int MaxLength { get; private set; }
 		public string Signature { get; private set; }
 
-		public static FigletFont Load(string filePath) {
+		public static FigletFont Load(string filePath) 
+        {
 			if (filePath == null) throw new ArgumentNullException(nameof(filePath));
 			IEnumerable<string> fontLines = File.ReadLines(filePath);
 
-			FigletFont font = new FigletFont() {
+			FigletFont font = new FigletFont() 
+            {
 				Lines = fontLines.ToArray()
 			};
 			var cs = font.Lines.First();
 			var configs = cs.Split(' ');
 			font.Signature = configs.First().Remove(configs.First().Length - 1);
 
-			if(font.Signature == "flf2a") {
+			if(font.Signature == "flf2a") 
+            {
 				font.HardBlank = configs.First().Last().ToString();
 				font.Height = ParseInt(configs, 1);
 				font.MaxLength = ParseInt(configs, 3);
@@ -38,25 +43,26 @@ namespace ConsoleGameEngine {
 			return font;
 		}
 
-		private static int ParseInt(string[] values, int index) {
+		private static int ParseInt(string[] values, int index)
+        {
 			var i = 0;
-			if(values.Length > index) {
+			if(values.Length > index) 
+            {
 				int.TryParse(values[index], out i);
 			}
 
 			return i;
 		}
 
-
-
-		// ----
-		internal static int GetStringWidth(FigletFont font, string value) {
+		internal static int GetStringWidth(FigletFont font, string value) 
+        {
 			List<int> charWidths = new List<int>();
-			foreach (var character in value) {
+			foreach (var character in value) 
+            {
 				int charWidth = 0;
-				for (int line = 1; line <= font.Height; line++) {
+				for (int line = 1; line <= font.Height; line++) 
+                {
 					string figletCharacter = GetCharacter(font, character, line);
-
 					charWidth = figletCharacter.Length > charWidth ? figletCharacter.Length : charWidth;
 				}
 				charWidths.Add(charWidth);
@@ -65,13 +71,15 @@ namespace ConsoleGameEngine {
 			return charWidths.Sum();
 		}
 
-		internal static string GetCharacter(FigletFont font, char character, int line) {
+		internal static string GetCharacter(FigletFont font, char character, int line) 
+        {
 			var start = font.CommentLines + ((Convert.ToInt32(character) - 32) * font.Height);
 			var result = font.Lines[start + line];
 			var lineEnding = result[result.Length - 1];
 			result = Regex.Replace(result, @"\" + lineEnding + "{1,2}$", string.Empty);
 
-			if (font.Kerning > 0) {
+			if (font.Kerning > 0) 
+            {
 				result += new string(' ', font.Kerning);
 			}
 

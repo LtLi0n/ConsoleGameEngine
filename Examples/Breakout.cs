@@ -75,7 +75,7 @@ namespace ConsoleGameEngineExamples
 
         public override void Create()
         {
-            Engine.SetPalette(Palettes.Pico8);
+            Engine.SetPalette(Color.Palettes.Pico8);
             Console.Title = "Breakout";
             TargetFramerate = 50;
             blocks = new Block[blockRows, blockCols];

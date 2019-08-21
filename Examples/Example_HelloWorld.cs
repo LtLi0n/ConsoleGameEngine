@@ -15,7 +15,7 @@ namespace ConsoleGameEngineExamples {
 		FigletFont font;
 
 		public override void Create() {
-			Engine.SetPalette(Palettes.Pico8);
+			Engine.SetPalette(Color.Palettes.Pico8);
 			Engine.Borderless();
 
 			TargetFramerate = 15;
@@ -24,7 +24,7 @@ namespace ConsoleGameEngineExamples {
 		}
 
 		public override void Update() {
-			p.Y = 14 + (int)(Math.Sin(i * 0.1f) * 4f);
+			p += new Point(0, 14 + (int)(Math.Sin(i * 0.1f) * 4f));
 			i++;
 		}
 

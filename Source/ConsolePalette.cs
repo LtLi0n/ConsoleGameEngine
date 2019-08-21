@@ -4,23 +4,28 @@
 
 	class ConsolePalette {
 
-		public static int SetColor(int consoleColor, Color targetColor) {
+		public static int SetColor(int consoleColor, Color targetColor) 
+        {
 			return SetColor(consoleColor, targetColor.R, targetColor.G, targetColor.B);
 		}
 
-		private static int SetColor(int color, uint r, uint g, uint b) {
+		private static int SetColor(int color, uint r, uint g, uint b) 
+        {
 			NativeMethods.CONSOLE_SCREEN_BUFFER_INFO_EX csbe = new NativeMethods.CONSOLE_SCREEN_BUFFER_INFO_EX();
 			csbe.cbSize = Marshal.SizeOf(csbe);
 			IntPtr hConsoleOutput = NativeMethods.GetStdHandle(-11);
-			if (hConsoleOutput == new IntPtr(-1)) {
+			if (hConsoleOutput == new IntPtr(-1)) 
+            {
 				return Marshal.GetLastWin32Error();
 			}
 			bool brc = NativeMethods.GetConsoleScreenBufferInfoEx(hConsoleOutput, ref csbe);
-			if (!brc) {
+			if (!brc)
+            {
 				return Marshal.GetLastWin32Error();
 			}
 
-			switch (color) {
+			switch (color) 
+            {
 				case 0:
 					csbe.black = new NativeMethods.ColorRef(r, g, b);
 					break;
@@ -75,7 +80,8 @@
 			++csbe.srWindow.Right;
 
 			brc = NativeMethods.SetConsoleScreenBufferInfoEx(hConsoleOutput, ref csbe);
-			if (!brc) {
+			if (!brc) 
+            {
 				return Marshal.GetLastWin32Error();
 			}
 			return 0;

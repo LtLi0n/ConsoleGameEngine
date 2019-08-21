@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using ConsoleGameEngine;
 
@@ -16,7 +12,7 @@ namespace ConsoleGameEngineExamples {
 		Point player = new Point(1, 2);
 
 		public override void Create() {
-			Engine.SetPalette(Palettes.Pico8);
+			Engine.SetPalette(Color.Palettes.Pico8);
 			Engine.Borderless();
 
 			map = new int[10, 8] {
@@ -55,19 +51,19 @@ namespace ConsoleGameEngineExamples {
 
 					switch (map[y, x]) {
 						case 1:
-							Engine.SetPixel(p, 7, ConsoleCharacter.Full);
+							Engine.SetPixel(p, 7, ConsoleCharacter.FULL);
 							break;
 						case 3:
-							Engine.SetPixel(p, 9, ConsoleCharacter.Full);
+							Engine.SetPixel(p, 9, ConsoleCharacter.FULL);
 							break;
 						case 4:
-							Engine.SetPixel(p, 8, (ConsoleCharacter)'x');
+							Engine.SetPixel(p, 8, 'x');
 							break;
 					}
 				}
 			}
 
-			Engine.SetPixel(player + offset, 8, (ConsoleCharacter)'@');
+			Engine.SetPixel(player + offset, 8, '@');
 
 			Engine.DisplayBuffer();
 		}

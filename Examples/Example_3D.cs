@@ -37,7 +37,7 @@ namespace ConsoleGameEngineExamples {
 		private int consoleWidth;
 
 		public override void Create() {
-			Engine.SetPalette(Palettes.Pico8);
+			Engine.SetPalette(Color.Palettes.Pico8);
 			Engine.SetBackground(0);
 			Engine.Borderless();
 
@@ -100,10 +100,10 @@ namespace ConsoleGameEngineExamples {
 				if (Vec3D.Dot(normal, transformed.p[0] - camera) < 0.0f) {
 					// beräknar ljus
 					float l = Vec3D.Dot(lightDirection, normal);
-					ConsoleCharacter character = ConsoleCharacter.Light;
+					ushort character = ConsoleCharacter.Light;
 					if (l > 0.4) character = ConsoleCharacter.Medium;
 					if (l > 0.7) character = ConsoleCharacter.Dark;
-					if (l > 1) character = ConsoleCharacter.Full;
+					if (l > 1) character = ConsoleCharacter.FULL;
 
 					// projekterar från 3D -> 2D
 					Triangle projected = new Triangle(null);
@@ -196,7 +196,7 @@ namespace ConsoleGameEngineExamples {
 		public Vec3D[] p;
 
 		public int color;
-		public ConsoleCharacter c;
+		public ushort c;
 
 		public Triangle(Vec3D pa, Vec3D pb, Vec3D pc) {
 			p = new Vec3D[3];
@@ -205,13 +205,13 @@ namespace ConsoleGameEngineExamples {
 			p[2] = pc;
 
 			color = 0;
-			c = ConsoleCharacter.Null;
+			c = ConsoleCharacter.NULL;
 		}
 
 		public Triangle(object n) {
 			p = new Vec3D[3];
 			color = 0;
-			c = ConsoleCharacter.Null;
+			c = ConsoleCharacter.NULL;
 		}
 
 		public void Translate(Vec3D delta) {

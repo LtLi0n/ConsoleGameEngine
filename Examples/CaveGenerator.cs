@@ -25,7 +25,7 @@ namespace ConsoleGameEngineExamples {
 		int sel = 0;
 
 		public override void Create() {
-			Engine.SetPalette(Palettes.Default);
+			Engine.SetPalette(Color.Palettes.Default);
 			Engine.Borderless();
 
 			seed = rand.Next(int.MinValue, int.MaxValue);

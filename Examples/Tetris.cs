@@ -34,7 +34,7 @@ namespace ConsoleGameEngineExamples {
 			new Tetris().Construct(fieldWidth + 2, fieldHeight + 6, 16, 16, FramerateMode.MaxFps);
 		}
 		public override void Create() {
-			Engine.SetPalette(Palettes.Pico8);
+			Engine.SetPalette(Color.Palettes.Pico8);
 			Engine.Borderless();
 			Console.Title = "Tetris";
 			TargetFramerate = 50;
@@ -55,28 +55,33 @@ namespace ConsoleGameEngineExamples {
 
 		public override void Update() {
 			if (!gameover) {
-				// hanterar input
+                // hanterar input
+
+                int add_x = 0, add_y = 0;
+
 				if (Engine.GetKeyDown(ConsoleKey.RightArrow)) {
-					current.X += DoesPieceFit(currentTetromino, rotation, current + new Point(1, 0)) ? 1 : 0;
+                    add_x += DoesPieceFit(currentTetromino, rotation, current + new Point(1, 0)) ? 1 : 0;
 				}
 				if (Engine.GetKeyDown(ConsoleKey.LeftArrow)) {
-					current.X -= DoesPieceFit(currentTetromino, rotation, current - new Point(1, 0)) ? 1 : 0;
+                    add_x -= DoesPieceFit(currentTetromino, rotation, current - new Point(1, 0)) ? 1 : 0;
 				}
 				if (Engine.GetKey(ConsoleKey.DownArrow) && frame % 3 == 0) {
-					current.Y += DoesPieceFit(currentTetromino, rotation, current + new Point(0, 1)) ? 1 : 0;
+                    add_y += DoesPieceFit(currentTetromino, rotation, current + new Point(0, 1)) ? 1 : 0;
 				}
 
 				if (Engine.GetKeyDown(ConsoleKey.UpArrow)) {
 					rotation += DoesPieceFit(currentTetromino, rotation + 1, current) ? 1 : 0;
 				}
 
-				frame++;
+                current = new Point(current.X + add_x, current.Y + add_y);
+
+                frame++;
 
 				// gör endast denna uppdatering ibland (högre framerate på input)
 				if (frame % levels[level] == 0) {
 					// tvingar tetrominon neråt
 					if (DoesPieceFit(currentTetromino, rotation, current + new Point(0, 1))) {
-						current.Y += 1;
+                        current += new Point(0, 1);
 					} else {
 						// placerar tetrominon på spelfältet
 						for (int px = 0; px < 4; px++) {
@@ -126,8 +131,7 @@ namespace ConsoleGameEngineExamples {
 						}
 						lines.Clear();
 
-						current.X = fieldWidth / 2 -2;
-						current.Y = 0;
+                        current = new Point(fieldWidth / 2 - 2, 0);
 						rotation = 0;
 						currentTetromino = rand.Next(0, tetromino.Length);
 
@@ -142,7 +146,7 @@ namespace ConsoleGameEngineExamples {
 				}
 
 			} else {
-				Engine.Fill(new Point(fieldWidth / 2 - 5, fieldHeight / 2 - 1), new Point(fieldWidth / 2 + 6, fieldHeight / 2 + 3), 0, ConsoleCharacter.Full);
+				Engine.Fill(new Point(fieldWidth / 2 - 5, fieldHeight / 2 - 1), new Point(fieldWidth / 2 + 6, fieldHeight / 2 + 3), 0, ConsoleCharacter.FULL);
 				Engine.WriteText(new Point(fieldWidth / 2 - 4, fieldHeight/2), "Game Over!", 8);
 				Engine.WriteText(new Point(fieldWidth / 2 - 4, fieldHeight / 2 + 1), "Highscore:", 7);
 

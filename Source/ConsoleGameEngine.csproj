@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ConsoleGameEngine</RootNamespace>
     <AssemblyName>ConsoleGameEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,19 +48,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Color.cs" />
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="ConsoleEngine.cs" />
-    <Compile Include="ConsoleEnums.cs" />
-    <Compile Include="ConsoleFont.cs" />
+    <Compile Include="Shared\Internal\ConsoleFont.cs" />
     <Compile Include="ConsoleGame.cs" />
-    <Compile Include="ConsoleHelper.cs" />
+    <Compile Include="Shared\Internal\NativeMethods.cs" />
     <Compile Include="ConsolePalette.cs" />
+    <Compile Include="Core\Color.cs" />
     <Compile Include="FigletFont.cs" />
-    <Compile Include="Point.cs" />
+    <Compile Include="Core\Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\ConsoleCharacter.cs" />
+    <Compile Include="Shared\FramerateMode.cs" />
     <Compile Include="Utility.cs" />
-    <Compile Include="Vector.cs" />
+    <Compile Include="Core\Vector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
