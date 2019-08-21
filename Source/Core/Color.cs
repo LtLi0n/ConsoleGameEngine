@@ -52,7 +52,7 @@
 
             /// <summary> default windows console palette. </summary>
             public static Color[] Default =>
-                new Color[16] 
+                new Color[16]
                 {
                     new Color(12, 12, 12), // Black
                     new Color(0, 55, 218), // DarkBlue

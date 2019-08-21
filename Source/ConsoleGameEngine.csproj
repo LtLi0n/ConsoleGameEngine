@@ -63,5 +63,8 @@
     <Compile Include="Utility.cs" />
     <Compile Include="Core\Vector.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

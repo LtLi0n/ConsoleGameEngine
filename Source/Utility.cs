@@ -1,14 +1,14 @@
-﻿namespace ConsoleGameEngine 
+﻿namespace ConsoleGameEngine
 {
-	/// <summary> Utility class. </summary>
-	public class Utility 
+    /// <summary> Utility class. </summary>
+    public class Utility
     {
-		static public int Clamp(int a, int min, int max) 
+        static public int Clamp(int a, int min, int max)
         {
-			a = (a > max) ? max : a;
-			a = (a < min) ? min : a;
+            a = (a > max) ? max : a;
+            a = (a < min) ? min : a;
 
-			return a;
-		}
-	}
+            return a;
+        }
+    }
 }
