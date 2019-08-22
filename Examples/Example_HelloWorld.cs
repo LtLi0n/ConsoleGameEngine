@@ -1,12 +1,14 @@
 ﻿using ConsoleGameEngine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace ConsoleGameEngineExamples {
+using static ConsoleGameEngine.ColorPalettes.PaletteColorContainer_Pico8;
 
-	internal class HelloWorld : ConsoleGame {
-		private static void Main(string[] args) {
+namespace ConsoleGameEngineExamples 
+{
+	internal class HelloWorld : ConsoleGame 
+    {
+		private static void Main(string[] args) 
+        {
 			new HelloWorld().Construct(128, 64, 4, 4, FramerateMode.MaxFps);
 		}
 
@@ -14,8 +16,9 @@ namespace ConsoleGameEngineExamples {
 		int i = 0;
 		FigletFont font;
 
-		public override void Create() {
-			Engine.SetPalette(Color.Palettes.Pico8);
+		public override void Create() 
+        {
+			Engine.SetPalette(PaletteColor.Containers.Pico8);
 			Engine.Borderless();
 
 			TargetFramerate = 15;
@@ -23,15 +26,17 @@ namespace ConsoleGameEngineExamples {
 			font = FigletFont.Load("caligraphy.flf");
 		}
 
-		public override void Update() {
+		public override void Update() 
+        {
 			p += new Point(0, 14 + (int)(Math.Sin(i * 0.1f) * 4f));
 			i++;
 		}
 
-		public override void Render() {
+		public override void Render() 
+        {
 			Engine.ClearBuffer();
 
-			Engine.WriteFiglet(p, "Hello", font, 8);
+			Engine.WriteFiglet(p, "Hello", font, FG_RED);
 
 			Engine.DisplayBuffer();
 		}

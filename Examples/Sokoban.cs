@@ -1,10 +1,14 @@
 ﻿using System;
-
 using ConsoleGameEngine;
 
-namespace ConsoleGameEngineExamples {
-	class Sokoban : ConsoleGame {
-		private static void Main(string[] args) {
+using static ConsoleGameEngine.ColorPalettes.PaletteColorContainer_Pico8;
+
+namespace ConsoleGameEngineExamples
+{
+	class Sokoban : ConsoleGame 
+    {
+		private static void Main(string[] args) 
+        {
 			new Sokoban().Construct(16, 16, 16, 16, FramerateMode.Unlimited);
 		}
 
@@ -12,7 +16,7 @@ namespace ConsoleGameEngineExamples {
 		Point player = new Point(1, 2);
 
 		public override void Create() {
-			Engine.SetPalette(Color.Palettes.Pico8);
+			Engine.SetPalette(PaletteColor.Containers.Pico8);
 			Engine.Borderless();
 
 			map = new int[10, 8] {
@@ -41,7 +45,7 @@ namespace ConsoleGameEngineExamples {
 		public override void Render() {
 			Engine.ClearBuffer();
 
-			Engine.Frame(new Point(1, 1), new Point(14, 14), 7);
+			Engine.Frame(new Point(1, 1), new Point(14, 14), FG_WHITE);
 
 			Point offset = new Point(4, 3);
 
@@ -51,19 +55,19 @@ namespace ConsoleGameEngineExamples {
 
 					switch (map[y, x]) {
 						case 1:
-							Engine.SetPixel(p, 7, ConsoleCharacter.FULL);
+							Engine.SetPixel(p, FG_WHITE, ConsoleCharacter.Full);
 							break;
 						case 3:
-							Engine.SetPixel(p, 9, ConsoleCharacter.FULL);
+							Engine.SetPixel(p, FG_ORANGE, ConsoleCharacter.Full);
 							break;
 						case 4:
-							Engine.SetPixel(p, 8, 'x');
+							Engine.SetPixel(p, FG_RED, 'x');
 							break;
 					}
 				}
 			}
 
-			Engine.SetPixel(player + offset, 8, '@');
+			Engine.SetPixel(player + offset, FG_RED, '@');
 
 			Engine.DisplayBuffer();
 		}

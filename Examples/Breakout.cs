@@ -8,9 +8,9 @@ namespace ConsoleGameEngineExamples
         internal int x;
         internal int y;
         internal bool alive;
-        internal int color;
+        internal byte color;
 
-        internal Block(int xpos, int ypos, bool a, int c)
+        internal Block(int xpos, int ypos, bool a, byte c)
         {
             x = xpos;
             y = ypos;
@@ -75,14 +75,14 @@ namespace ConsoleGameEngineExamples
 
         public override void Create()
         {
-            Engine.SetPalette(Color.Palettes.Pico8);
+            Engine.SetPalette(PaletteColor.Containers.Pico8);
             Console.Title = "Breakout";
             TargetFramerate = 50;
             blocks = new Block[blockRows, blockCols];
             width = defaultPaddleWidth;
             height = defaultPaddleHeight;
             gameOverText = "";
-            int color = 8;
+            byte color = 8;
             for (int y = 0; y < blockRows; y++)
             {
                 for (int x = 0; x < blockCols; x++)
@@ -103,9 +103,8 @@ namespace ConsoleGameEngineExamples
                 Engine.WriteText(new Point(1, 4), "Breakout", 7);
                 Engine.WriteText(new Point(1, 8), "Press Enter to Play", 7);
                 Engine.WriteText(new Point(1, 12), "Press Del to Exit", 7);
-
-
             }
+
             else if (gameState == gameStatePlaying)
             {
                 Engine.Fill(new Point(paddlex, paddley), new Point(paddlex + width, paddley + height), 7);

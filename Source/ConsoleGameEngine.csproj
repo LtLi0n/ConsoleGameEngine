@@ -50,11 +50,14 @@
   <ItemGroup>
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="ConsoleEngine.cs" />
+    <Compile Include="Core\Color\Palettes\PaletteColorContainer_DefaultWindowsScheme.cs" />
+    <Compile Include="Core\Color\PaletteColorContainer.cs" />
+    <Compile Include="Core\Color\Palettes\PaletteColorContainer_Pico8.cs" />
     <Compile Include="Shared\Internal\ConsoleFont.cs" />
     <Compile Include="ConsoleGame.cs" />
     <Compile Include="Shared\Internal\NativeMethods.cs" />
     <Compile Include="ConsolePalette.cs" />
-    <Compile Include="Core\Color.cs" />
+    <Compile Include="Core\Color\Color.cs" />
     <Compile Include="FigletFont.cs" />
     <Compile Include="Core\Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

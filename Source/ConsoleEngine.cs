@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 
+using static ConsoleGameEngine.ColorPalettes.PaletteColorContainer_DefaultWindowsScheme;
+
 namespace ConsoleGameEngine
 {
     ///<summary>Class for Drawing to a console window.</summary>
@@ -12,8 +14,8 @@ namespace ConsoleGameEngine
         private readonly IntPtr stdErrorHandle = NativeMethods.GetStdHandle(-12);
         private readonly IntPtr consoleHandle = NativeMethods.GetConsoleWindow();
 
-        /// <summary> The active color palette. </summary> <see cref="Color"/>
-        public Color[] Palette { get; private set; }
+        ///<summary> The active color palette.</summary>
+        public PaletteColorContainer Palette { get; private set; }
 
         /// <summary> The current size of the font. </summary> <see cref="Point"/>
         public Point FontSize { get; private set; }
@@ -53,8 +55,8 @@ namespace ConsoleGameEngine
             CharBuffer = new char[width, height];
             ColorBuffer = new int[width, height];
 
-            SetBackground(0);
-            SetPalette(Color.Palettes.Default);
+            SetBackground(FG_BLACK);
+            SetPalette(PaletteColor.Containers.Default);
 
             // Stänger av alla standard ConsoleInput metoder (Quick-edit etc)
             NativeMethods.SetConsoleMode(stdInputHandle, 0x0080);
@@ -64,27 +66,27 @@ namespace ConsoleGameEngine
             ConsoleFont.SetFont(stdOutputHandle, (short)fontW, (short)fontH);
         }
 
-        // Rita
-        private void SetPixel(Point selectedPoint, int color, char character)
+        /// <summary> Draws a single pixel to the screenbuffer. </summary>
+        /// <param name="v">The Point that should be drawn to.</param>
+        /// <param name="color">The color index.</param>
+        /// <param name="c">The character that should be drawn with.</param>
+        public void SetPixel(Point v, byte color, char c = ConsoleCharacter.Full)
         {
-            if (selectedPoint.X >= CharBuffer.GetLength(0) ||
-                selectedPoint.Y >= CharBuffer.GetLength(1) ||
-                selectedPoint.X < 0 ||
-                selectedPoint.Y < 0) return;
+            if (v.X >= CharBuffer.GetLength(0) || v.Y >= CharBuffer.GetLength(1) ||
+                v.X < 0 || v.Y < 0) return;
 
-            CharBuffer[selectedPoint.X, selectedPoint.Y] = character;
-            ColorBuffer[selectedPoint.X, selectedPoint.Y] = color;
+            CharBuffer[v.X, v.Y] = c;
+            ColorBuffer[v.X, v.Y] = color;
         }
 
         /// <summary> Sets the console's color palette </summary>
         /// <param name="colors"></param>
         /// <exception cref="ArgumentException"/> <exception cref="ArgumentNullException"/>
-        public void SetPalette(Color[] colors)
+        public void SetPalette(PaletteColorContainer colors)
         {
-            if (colors.Length > 16) throw new ArgumentException("Windows command prompt only support 16 colors.");
             Palette = colors ?? throw new ArgumentNullException();
 
-            for (int i = 0; i < colors.Length; i++)
+            for (int i = 0; i < 16; i++)
             {
                 ConsolePalette.SetColor(i, colors[i]);
             }
@@ -92,7 +94,7 @@ namespace ConsoleGameEngine
 
         /// <summary> Sets the console's background color to one in the active palette. </summary>
         /// <param name="color">Index of background color in palette.</param>
-        public void SetBackground(int color = 0)
+        public void SetBackground(byte color)
         {
             if (color > 16 || color < 0) throw new IndexOutOfRangeException();
             Background = color;
@@ -140,20 +142,11 @@ namespace ConsoleGameEngine
 
         #region Primitives
 
-        /// <summary> Draws a single pixel to the screenbuffer. </summary>
-        /// <param name="v">The Point that should be drawn to.</param>
-        /// <param name="color">The color index.</param>
-        /// <param name="c">The character that should be drawn with.</param>
-        public void SetPixel(Point v, int color, ushort c = ConsoleCharacter.FULL)
-        {
-            SetPixel(v, color, (char)c);
-        }
-
         /// <summary> Draws a frame using boxdrawing symbols. </summary>
         /// <param name="pos">Top Left corner of box.</param>
         /// <param name="end">Bottom Right corner of box.</param>
         /// <param name="color">The specified color index.</param>
-        public void Frame(Point pos, Point end, int color)
+        public void Frame(Point pos, Point end, byte color)
         {
             for (int i = 1; i < end.X - pos.X; i++)
             {
@@ -177,7 +170,7 @@ namespace ConsoleGameEngine
         /// <param name="pos">The position to write to.</param>
         /// <param name="text">String to write.</param>
         /// <param name="color">Specified color index to write with.</param>
-        public void WriteText(Point pos, string text, int color)
+        public void WriteText(Point pos, string text, byte color)
         {
             for (int i = 0; i < text.Length; i++)
             {
@@ -191,7 +184,7 @@ namespace ConsoleGameEngine
         /// <param name="font">FIGLET font to write with.</param>
         /// <param name="color">Specified color index to write with.</param>
         /// <see cref="FigletFont"/>
-        public void WriteFiglet(Point pos, string text, FigletFont font, int color)
+        public void WriteFiglet(Point pos, string text, FigletFont font, byte color)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
             if (Encoding.UTF8.GetByteCount(text) != text.Length) throw new ArgumentException("String contains non-ascii characters");
@@ -224,7 +217,7 @@ namespace ConsoleGameEngine
         /// <param name="col">Specified color index.</param>
         /// <param name="arc">angle in degrees, 360 if not specified.</param>
         /// <param name="c">Character to use.</param>
-        public void Arc(Point pos, int radius, int col, int arc = 360, ushort c = ConsoleCharacter.FULL)
+        public void Arc(Point pos, int radius, byte col, int arc = 360, char c = ConsoleCharacter.Full)
         {
             for (int a = 0; a < arc; a++)
             {
@@ -232,7 +225,7 @@ namespace ConsoleGameEngine
                 int y = (int)(radius * Math.Sin((float)a / 57.29577f));
 
                 Point v = new Point(pos.X + x, pos.Y + y);
-                SetPixel(v, col, ConsoleCharacter.FULL);
+                SetPixel(v, col, ConsoleCharacter.Full);
             }
         }
 
@@ -243,7 +236,7 @@ namespace ConsoleGameEngine
         /// <param name="arc">End angle in degrees.</param>
         /// <param name="col">Specified color index.</param>
         /// <param name="c">Character to use.</param>
-        public void SemiCircle(Point pos, int radius, int start, int arc, int col, ushort c = ConsoleCharacter.FULL)
+        public void SemiCircle(Point pos, int radius, int start, int arc, byte col, char c = ConsoleCharacter.Full)
         {
             for (int a = start; a > -arc + start; a--)
             {
@@ -265,7 +258,7 @@ namespace ConsoleGameEngine
         /// <param name="end">Point to end line at.</param>
         /// <param name="col">Color to draw with.</param>
         /// <param name="c">Character to use.</param>
-        public void Line(Point start, Point end, int col, ushort c = ConsoleCharacter.FULL)
+        public void Line(Point start, Point end, byte col, char c = ConsoleCharacter.Full)
         {
             Point delta = end - start;
             int da_x = 0, da_y = 0;
@@ -318,7 +311,7 @@ namespace ConsoleGameEngine
         /// <param name="end">Bottom Right corner of rectangle.</param>
         /// <param name="col">Color to draw with.</param>
         /// <param name="c">Character to use.</param>
-        public void Rectangle(Point pos, Point end, int col, ushort c = ConsoleCharacter.FULL)
+        public void Rectangle(Point pos, Point end, byte col, char c = ConsoleCharacter.Full)
         {
             for (int i = 0; i < end.X - pos.X; i++)
             {
@@ -338,7 +331,7 @@ namespace ConsoleGameEngine
         /// <param name="b">Bottom Right corner of rectangle.</param>
         /// <param name="col">Color to draw with.</param>
         /// <param name="c">Character to use.</param>
-        public void Fill(Point a, Point b, int col, ushort c = ConsoleCharacter.FULL)
+        public void Fill(Point a, Point b, byte col, char c = ConsoleCharacter.Full)
         {
             for (int y = a.Y; y < b.Y; y++)
             {
@@ -355,7 +348,7 @@ namespace ConsoleGameEngine
         /// <param name="spacing">the spacing until next line</param>
         /// <param name="col">Color to draw with.</param>
         /// <param name="c">Character to use.</param>
-        public void Grid(Point a, Point b, int spacing, int col, ushort c = ConsoleCharacter.FULL)
+        public void Grid(Point a, Point b, int spacing, byte col, char c = ConsoleCharacter.Full)
         {
             for (int y = a.Y; y < b.Y / spacing; y++)
             {
@@ -373,7 +366,7 @@ namespace ConsoleGameEngine
         /// <param name="c">Point C.</param>
         /// <param name="col">Color to draw with.</param>
         /// <param name="character">Character to use.</param>
-        public void Triangle(Point a, Point b, Point c, int col, ushort character = ConsoleCharacter.FULL)
+        public void Triangle(Point a, Point b, Point c, byte col, char character = ConsoleCharacter.Full)
         {
             Line(a, b, col, character);
             Line(b, c, col, character);
@@ -388,7 +381,7 @@ namespace ConsoleGameEngine
         /// <param name="c">Point C.</param>
         /// <param name="col">Color to draw with.</param>
         /// <param name="character">Character to use.</param>
-        public void FillTriangle(Point a, Point b, Point c, int col, ushort character = ConsoleCharacter.FULL)
+        public void FillTriangle(Point a, Point b, Point c, byte col, char character = ConsoleCharacter.Full)
         {
             Point min = new Point(Math.Min(Math.Min(a.X, b.X), c.X), Math.Min(Math.Min(a.Y, b.Y), c.Y));
             Point max = new Point(Math.Max(Math.Max(a.X, b.X), c.X), Math.Max(Math.Max(a.Y, b.Y), c.Y));

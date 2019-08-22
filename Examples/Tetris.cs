@@ -5,20 +5,24 @@ using System.Linq;
 using ConsoleGameEngine;
 using System.Threading;
 
-namespace ConsoleGameEngineExamples {
-	class Tetris : ConsoleGame {
+using static ConsoleGameEngine.ColorPalettes.PaletteColorContainer_Pico8;
+
+namespace ConsoleGameEngineExamples 
+{
+	class Tetris : ConsoleGame 
+    {
 		readonly Random rand = new Random();
 		readonly string[] tetromino = new string[7];
 
 		int[] levels;
 
-		int[] playingField;
+		byte[] playingField;
 
 		static int fieldWidth = 14; static int fieldHeight = 24;
 
 		int lineCount = 0;
 		int frame = 0;
-		int currentTetromino = 0;
+		byte currentTetromino = 0;
 		int rotation = 0;
 		Point current;
 
@@ -34,7 +38,7 @@ namespace ConsoleGameEngineExamples {
 			new Tetris().Construct(fieldWidth + 2, fieldHeight + 6, 16, 16, FramerateMode.MaxFps);
 		}
 		public override void Create() {
-			Engine.SetPalette(Color.Palettes.Pico8);
+			Engine.SetPalette(PaletteColor.Containers.Pico8);
 			Engine.Borderless();
 			Console.Title = "Tetris";
 			TargetFramerate = 50;
@@ -87,7 +91,7 @@ namespace ConsoleGameEngineExamples {
 						for (int px = 0; px < 4; px++) {
 							for (int py = 0; py < 4; py++) {
 								if (tetromino[currentTetromino][Rotate(new Point(px, py), rotation)] != '.') {
-									playingField[(current.Y + py) * fieldWidth + (current.X + px)] = currentTetromino + 1;
+									playingField[(current.Y + py) * fieldWidth + (current.X + px)] = (byte)(currentTetromino + 1);
 								}
 							}
 						}
@@ -133,7 +137,7 @@ namespace ConsoleGameEngineExamples {
 
                         current = new Point(fieldWidth / 2 - 2, 0);
 						rotation = 0;
-						currentTetromino = rand.Next(0, tetromino.Length);
+						currentTetromino = (byte)rand.Next(0, tetromino.Length);
 
 						if(lineCount > 10) {
 							lineCount = 0;
@@ -146,17 +150,22 @@ namespace ConsoleGameEngineExamples {
 				}
 
 			} else {
-				Engine.Fill(new Point(fieldWidth / 2 - 5, fieldHeight / 2 - 1), new Point(fieldWidth / 2 + 6, fieldHeight / 2 + 3), 0, ConsoleCharacter.FULL);
-				Engine.WriteText(new Point(fieldWidth / 2 - 4, fieldHeight/2), "Game Over!", 8);
-				Engine.WriteText(new Point(fieldWidth / 2 - 4, fieldHeight / 2 + 1), "Highscore:", 7);
+				Engine.Fill(
+                    a: new Point(fieldWidth / 2 - 5, fieldHeight / 2 - 1),
+                    b: new Point(fieldWidth / 2 + 6, fieldHeight / 2 + 3), 
+                    col: FG_BLACK,
+                    c: ConsoleCharacter.Full);
+
+				Engine.WriteText(new Point(fieldWidth / 2 - 4, fieldHeight/2), "Game Over!", FG_RED);
+				Engine.WriteText(new Point(fieldWidth / 2 - 4, fieldHeight / 2 + 1), "Highscore:", FG_WHITE);
 
 				if(highscore < score) {
 					highscore = score;
 				}
 
-				Engine.WriteText(new Point(fieldWidth / 2 - 4, fieldHeight / 2 + 2), highscore.ToString(), 9);
+				Engine.WriteText(new Point(fieldWidth / 2 - 4, fieldHeight / 2 + 2), highscore.ToString(), FG_ORANGE);
 
-				Engine.Frame(new Point(fieldWidth / 2 - 5, fieldHeight / 2 - 1), new Point(fieldWidth / 2 + 6, fieldHeight / 2 + 3), 7);
+				Engine.Frame(new Point(fieldWidth / 2 - 5, fieldHeight / 2 - 1), new Point(fieldWidth / 2 + 6, fieldHeight / 2 + 3), FG_WHITE);
 
 				Engine.DisplayBuffer();
 
@@ -171,7 +180,7 @@ namespace ConsoleGameEngineExamples {
 			// ritar banan
 			for(int x = 0; x < fieldWidth; x++) {
 				for(int y = 0; y < fieldHeight; y++) {
-					if(playingField[(y) * fieldWidth + x] != 0) Engine.SetPixel(new Point(x+1, y+1), playingField[y * fieldWidth + x] + 7);
+					if(playingField[(y) * fieldWidth + x] != 0) Engine.SetPixel(new Point(x+1, y+1), (byte)(playingField[y * fieldWidth + x] + FG_WHITE));
 				}
 			}
 
@@ -179,17 +188,17 @@ namespace ConsoleGameEngineExamples {
 			for(int px = 0; px < 4; px ++) {
 				for(int py = 0; py < 4; py++) {
 					if(tetromino[currentTetromino][Rotate(new Point(px, py), rotation)] != '.') {
-						Engine.SetPixel(new Point(current.X + px+1, current.Y + py+1), GetTetrominoColor(currentTetromino) + 8);
+						Engine.SetPixel(new Point(current.X + px+1, current.Y + py+1), (byte)(GetTetrominoColor(currentTetromino) + FG_RED));
 					}
 				}
 			}
-			Engine.Frame(new Point(1, 0), new Point(fieldWidth, fieldHeight), 7);
-			Engine.WriteText(new Point(2, fieldHeight+1), "Score", 7);
-			Engine.WriteText(new Point(fieldWidth - score.ToString("N0").Count(), fieldHeight+1), score.ToString("N0"), 9);
-			Engine.WriteText(new Point(2, fieldHeight + 2), "Line", 7);
-			Engine.WriteText(new Point(fieldWidth - score.ToString().Count(), fieldHeight + 2), lineCount.ToString(), 7);
-			Engine.WriteText(new Point(2, fieldHeight + 3), "Level", 7);
-			Engine.WriteText(new Point(fieldWidth - score.ToString().Count(), fieldHeight + 3), level.ToString(), 7);
+			Engine.Frame(new Point(1, 0), new Point(fieldWidth, fieldHeight), FG_WHITE);
+			Engine.WriteText(new Point(2, fieldHeight+1), "Score", FG_WHITE);
+			Engine.WriteText(new Point(fieldWidth - score.ToString("N0").Count(), fieldHeight+1), score.ToString("N0"), FG_ORANGE);
+			Engine.WriteText(new Point(2, fieldHeight + 2), "Line", FG_WHITE);
+			Engine.WriteText(new Point(fieldWidth - score.ToString().Count(), fieldHeight + 2), lineCount.ToString(), FG_WHITE);
+			Engine.WriteText(new Point(2, fieldHeight + 3), "Level", FG_WHITE);
+			Engine.WriteText(new Point(fieldWidth - score.ToString().Count(), fieldHeight + 3), level.ToString(), FG_WHITE);
 
 			Engine.DisplayBuffer();
 		}
@@ -232,22 +241,22 @@ namespace ConsoleGameEngineExamples {
 			return true;
 		}
 
-		int GetTetrominoColor(int t) {
+		byte GetTetrominoColor(int t) {
 			Match m = Regex.Match(tetromino[t], @"\d");
-			return Convert.ToInt32(m.Value[0]);
+			return Convert.ToByte(m.Value[0]);
 		}
 
 		void Restart() {
 			score = 0;
 			gameover = false;
 
-			playingField = new int[fieldWidth * fieldHeight];
+			playingField = new byte[fieldWidth * fieldHeight];
 			for (int x = 0; x < fieldWidth; x++) // kant för banan
 				for (int y = 0; y < fieldHeight; y++)
-					playingField[y * fieldWidth + x] = (x == 0 || x == fieldWidth - 1 || y == fieldHeight - 1) ? -1 : 0;    // väggar
+					playingField[y * fieldWidth + x] = (byte)((x == 0 || x == fieldWidth - 1 || y == fieldHeight - 1) ? -1 : 0);    // väggar
 
 			current = new Point(fieldWidth / 2 - 2, 0);
-			currentTetromino = rand.Next(0, tetromino.Length);
+			currentTetromino = (byte)rand.Next(0, tetromino.Length);
 		}
 	}
 }

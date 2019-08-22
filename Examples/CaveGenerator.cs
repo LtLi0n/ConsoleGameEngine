@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ConsoleGameEngine;
 
-namespace ConsoleGameEngineExamples {
-	class CaveGenerator : ConsoleGame {
-		static void Main(string[] args) {
-			new CaveGenerator().Construct(size.X, size.Y + 1, 8, 8, FramerateMode.Unlimited);
+namespace ConsoleGameEngineExamples 
+{
+	class CaveGenerator : ConsoleGame 
+    {
+		static void Main(string[] args) 
+        {
+			new CaveGenerator().Construct(size.X, size.Y + 1, 15, 15, FramerateMode.Unlimited);
 		}
 
-		static Point size = new Point(96, 64);
+		static Point size = new Point(52, 51);
 
 		int[,] m;
 		Random rand = new Random();
@@ -25,7 +24,7 @@ namespace ConsoleGameEngineExamples {
 		int sel = 0;
 
 		public override void Create() {
-			Engine.SetPalette(Color.Palettes.Default);
+			Engine.SetPalette(PaletteColor.Containers.Default);
 			Engine.Borderless();
 
 			seed = rand.Next(int.MinValue, int.MaxValue);
@@ -61,7 +60,7 @@ namespace ConsoleGameEngineExamples {
 
 			for(int i = 0; i < size.X; i++) {
 				for(int j = 0; j < size.Y; j++) {
-					int col = (m[i, j] == 1) ? 0 : 15;
+					byte col = (byte)((m[i, j] == 1) ? 0 : 15);
 					Engine.SetPixel(new Point(i, j), col);
 				}
 			}

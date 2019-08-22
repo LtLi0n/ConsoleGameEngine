@@ -1,15 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using ConsoleGameEngine;
 
-namespace ConsoleGameEngineExamples {
-	class Example3D : ConsoleGame {
-		static void Main(string[] args) {
+using static ConsoleGameEngine.ColorPalettes.PaletteColorContainer_Pico8;
+
+namespace ConsoleGameEngineExamples 
+{
+	class Example3D : ConsoleGame 
+    {
+		static void Main(string[] args) 
+        {
 			new Example3D().Construct(256, 256, 2, 2, FramerateMode.Unlimited);
 		}
 		readonly Random rand = new Random();
@@ -37,8 +38,8 @@ namespace ConsoleGameEngineExamples {
 		private int consoleWidth;
 
 		public override void Create() {
-			Engine.SetPalette(Color.Palettes.Pico8);
-			Engine.SetBackground(0);
+			Engine.SetPalette(PaletteColor.Containers.Pico8);
+			Engine.SetBackground(BG_BLACK);
 			Engine.Borderless();
 
 			Console.Title = "3D Demo";
@@ -100,10 +101,10 @@ namespace ConsoleGameEngineExamples {
 				if (Vec3D.Dot(normal, transformed.p[0] - camera) < 0.0f) {
 					// beräknar ljus
 					float l = Vec3D.Dot(lightDirection, normal);
-					ushort character = ConsoleCharacter.Light;
+					char character = ConsoleCharacter.Light;
 					if (l > 0.4) character = ConsoleCharacter.Medium;
 					if (l > 0.7) character = ConsoleCharacter.Dark;
-					if (l > 1) character = ConsoleCharacter.FULL;
+					if (l > 1) character = ConsoleCharacter.Full;
 
 					// projekterar från 3D -> 2D
 					Triangle projected = new Triangle(null);
@@ -136,8 +137,8 @@ namespace ConsoleGameEngineExamples {
 				Point a = new Point((int)t.p[0].x, (int)t.p[0].y);
 				Point b = new Point((int)t.p[1].x, (int)t.p[1].y);
 				Point c = new Point((int)t.p[2].x, (int)t.p[2].y);
-				if(drawSolid) Engine.FillTriangle(b, a, c, 9, t.c);
-				if(drawWireframe) Engine.Triangle(b, a, c, 7, t.c);
+				if(drawSolid) Engine.FillTriangle(b, a, c, FG_ORANGE, (char)t.c);
+				if(drawWireframe) Engine.Triangle(b, a, c, FG_WHITE, (char)t.c);
 			}
 
 			trianglesToRaster.Clear();
@@ -196,7 +197,7 @@ namespace ConsoleGameEngineExamples {
 		public Vec3D[] p;
 
 		public int color;
-		public ushort c;
+		public char c;
 
 		public Triangle(Vec3D pa, Vec3D pb, Vec3D pc) {
 			p = new Vec3D[3];

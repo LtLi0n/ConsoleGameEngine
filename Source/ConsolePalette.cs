@@ -5,7 +5,9 @@ namespace ConsoleGameEngine
 {
     class ConsolePalette
     {
-        public static int SetColor(int consoleColor, Color targetColor)
+        ///<param name="consoleColor">0-15 index.</param>
+        ///<param name="targetColor">Color to display at that 0-15 index.</param>
+        public static int SetColor(int consoleColor, PaletteColor targetColor)
         {
             return SetColor(consoleColor, targetColor.R, targetColor.G, targetColor.B);
         }
