@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ConsoleGameEngine;
+using System;
+using System.Diagnostics;
 using System.Text;
 
 using static ConsoleGameEngine.ColorPalettes.PaletteColorContainer_DefaultWindowsScheme;
@@ -29,6 +31,35 @@ namespace ConsoleGameEngine
         private ConsoleBuffer ConsoleBuffer { get; set; }
         private bool IsBorderless { get; set; }
 
+        //Probably hella expensive, need to move to check every so often instead of calling this every time.
+        ///<summary>Returns true if the current application has focus, false otherwise.</summary>
+        public bool HasFocus
+        {
+            get
+            {
+                var activatedHandle = NativeMethods.GetForegroundWindow();
+                if (activatedHandle == IntPtr.Zero)
+                {
+                    return false; // No window is currently activated
+                }
+                NativeMethods.GetWindowThreadProcessId(activatedHandle, out int activeProcId);
+                var proc = Process.GetCurrentProcess();
+                int procId = proc.Id;
+
+                bool focus = activeProcId == procId;
+                if (!focus)
+                {
+                    Process parent = ParentProcessUtilities.GetParentProcess(procId);
+                    if(parent != null)
+                    {
+                        focus = parent.Id == activeProcId;
+                    }
+                }
+
+                return focus;
+            }
+        }
+
         /// <summary> Creates a new ConsoleEngine. </summary>
         /// <param name="width">Target window width.</param>
         /// <param name="height">Target window height.</param>
@@ -39,7 +70,7 @@ namespace ConsoleGameEngine
             if (width < 1 || height < 1) throw new ArgumentOutOfRangeException();
             if (fontW < 1 || fontH < 1) throw new ArgumentOutOfRangeException();
 
-            Console.Title = "Untitled console application";
+            //Console.Title = "Untitled console application";
             Console.CursorVisible = false;
 
             // sätter fönstret och bufferns storlek
