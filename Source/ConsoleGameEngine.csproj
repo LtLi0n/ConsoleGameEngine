@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="ConsoleBuffer.cs" />
     <Compile Include="ConsoleEngine.cs" />
+    <Compile Include="ConsolePixel.cs" />
     <Compile Include="Core\Color\Palettes\PaletteColorContainer_DefaultWindowsScheme.cs" />
     <Compile Include="Core\Color\PaletteColorContainer.cs" />
     <Compile Include="Core\Color\Palettes\PaletteColorContainer_Pico8.cs" />

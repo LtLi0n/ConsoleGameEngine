@@ -24,6 +24,8 @@ namespace ConsoleGameEngine
 
         /// <summary> The dimensions of the window in characters. </summary> <see cref="Point"/>
         public Point WindowSize { get; private set; }
+        public int Width => WindowSize.X;
+        public int Height => WindowSize.Y;
 
         private char[,] CharBuffer { get; set; }
         private int[,] ColorBuffer { get; set; }
@@ -101,7 +103,7 @@ namespace ConsoleGameEngine
         /// <param name="v">The Point that should be drawn to.</param>
         /// <param name="color">The color index.</param>
         /// <param name="c">The character that should be drawn with.</param>
-        public void SetPixel(Point v, byte color, char c = ConsoleCharacter.Full)
+        public void SetPixel(Point v, byte color, char c = ' ')
         {
             if (v.X >= CharBuffer.GetLength(0) || v.Y >= CharBuffer.GetLength(1) ||
                 v.X < 0 || v.Y < 0) return;
@@ -109,6 +111,8 @@ namespace ConsoleGameEngine
             CharBuffer[v.X, v.Y] = c;
             ColorBuffer[v.X, v.Y] = color;
         }
+
+        public void SetPixel(int x, int y, byte color, char c = ' ') => SetPixel(new Point(x, y), color, c);
 
         /// <summary> Sets the console's color palette </summary>
         /// <param name="colors"></param>
