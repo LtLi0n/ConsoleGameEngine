@@ -65,7 +65,7 @@ namespace ConsoleGameEngine
                 FrameCounter %= sampleCount;
 
                 // kör main programmet
-                Update();
+                CoreUpdate();
                 Render();
 
                 float computingDuration = (float)(DateTime.UtcNow - lastTime).TotalMilliseconds;
@@ -97,7 +97,7 @@ namespace ConsoleGameEngine
                 FrameCounter++;
                 FrameCounter %= sampleCount;
 
-                Update();
+                CoreUpdate();
                 Render();
 
                 // beräknar framerate
@@ -130,7 +130,26 @@ namespace ConsoleGameEngine
         public abstract void Create();
         /// <summary> Run every frame before rendering. Do math here. </summary>
         public abstract void Update();
+
+
+        private void CoreUpdate()
+        {
+            //Update key states
+            //Upon engine rewrite, move this to Actual update method, where regular abstract update is replaced by OnUpdate
+            //As so with Render/OnRender
+            for (int i = 0; i < 255; i++)
+            {
+                bool currentKeyState = Engine.GetKeyDown((ConsoleKey)i);
+                Engine._keysPressed[i] = currentKeyState && !Engine._keys[i];
+                Engine._keys[i] = currentKeyState;
+            }
+            Update();
+        }
+
         /// <summary> Run every frame after updating. Do drawing here. </summary>
         public abstract void Render();
+
+        public bool KeyDown(ConsoleKey key) => Engine._keys[(int)key];
+        public bool KeyPressed(ConsoleKey key) => Engine._keysPressed[(int)key];
     }
 }

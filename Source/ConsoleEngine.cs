@@ -33,6 +33,9 @@ namespace ConsoleGameEngine
         private ConsoleBuffer ConsoleBuffer { get; set; }
         private bool IsBorderless { get; set; }
 
+        internal bool[] _keys = new bool[255];
+        internal bool[] _keysPressed = new bool[255];
+
         //Probably hella expensive, need to move to check every so often instead of calling this every time.
         ///<summary>Returns true if the current application has focus, false otherwise.</summary>
         public bool HasFocus
@@ -453,7 +456,7 @@ namespace ConsoleGameEngine
         /// <summary> Checks if specified key is pressed. </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True if key is pressed</returns>
-        public bool GetKey(ConsoleKey key)
+        internal bool GetKey(ConsoleKey key)
         {
             short s = NativeMethods.GetAsyncKeyState((int)key);
             return (s & 0x8000) > 0;
@@ -462,7 +465,7 @@ namespace ConsoleGameEngine
         /// <summary> Checks if specified key is pressed down. </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True if key is down</returns>
-        public bool GetKeyDown(ConsoleKey key)
+        internal bool GetKeyDown(ConsoleKey key)
         {
             int s = Convert.ToInt32(NativeMethods.GetAsyncKeyState((int)key));
             return (s == -32767);
